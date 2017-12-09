@@ -13,7 +13,8 @@ from torch.utils.data import DataLoader as torch_dl
 
 # Normalization
 
-def to_gauss(x): return np.sqrt(2)*erfinv(x)
+def to_gauss(x):
+    return np.sqrt(2)*erfinv(x)
 
 def normalize(data, exclude=None):
     norm_cols = [n for n, c in data.drop(exclude, 1).items() if len(np.unique(c)) > 2]
