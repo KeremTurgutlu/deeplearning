@@ -12,7 +12,7 @@ class SimpleColumnDataset(Dataset):
         self.y = y
 
     def __getitem__(self, index):
-        return torch.from_numpy(self.X[index]), torch.from_numpy(self.y[index, None])
+        return torch.from_numpy(self.X[index]).float(), torch.from_numpy(self.y[index, None])
 
     def __len__(self):
         return len(self.X)
