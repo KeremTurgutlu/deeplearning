@@ -4,11 +4,6 @@ import numpy as np
 ##############################
 # NORMALIZED GINI
 ##############################
-def get_gini_data(actuals, preds):
-    actual = [arr[0] for arr in actuals]
-    pred = [np.exp(arr[1]) for arr in preds]
-    return actual, pred
-
 
 def gini(actual, pred):
     assert (len(actual) == len(pred))
