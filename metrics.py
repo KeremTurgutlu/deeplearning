@@ -17,5 +17,4 @@ def gini(actual, pred):
 
 
 def gini_normalized(actual, pred):
-    actual, pred = get_gini_data(actual, pred)
     return gini(actual, pred) / gini(actual, actual)
