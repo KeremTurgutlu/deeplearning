@@ -64,13 +64,18 @@ def train(net, train_dl, valid_dl, criterion, optimizer, n):
         print(f'[{debias_loss} ,{val_loss}, {val_acc}]\n')
 
         # save model at every 1000th step
-        if batch_num % 1000 == 0:
-            print(f'Saving model at step {batch_num}')
-            torch.save(net.state_dict(), f'../models/trad_pool2d_{batch_num}')
-            torch.save({'optimizer': optimizer.state_dict(),
-                        'iter': batch_num,
-                        'epoch': epoch}, f'../models/trad_pool2d_optim_{batch_num}')
+        if batch_num % 500 == 0:
+            save_model(net, batch_num, epoch, optimizer)
 
+    save_model(net, batch_num, epoch, optimizer)
     # print final cmat
     print(cmat)
     return training_loss
+
+
+def save_model(net, batch_num, epoch, optimizer):
+    print(f'Saving model at step {batch_num}')
+    torch.save(net.state_dict(), f'../models/trad_pool2d_{batch_num}')
+    torch.save({'optimizer': optimizer.state_dict(),
+                'iter': batch_num,
+                'epoch': epoch}, f'../models/trad_pool2d_optim_{batch_num}')
