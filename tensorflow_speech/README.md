@@ -16,6 +16,8 @@ Later you may play around with train.py to set different hyperparameters, subsam
 
 At the final step running the following code will build the model for us. You can play around with subsample and epochs for faster experimentations. Ignore is used in order to ignore warnings in stdout that are coming from scikit-image.
 
-`python -W ignore main.py --subsample 1.0 --epochs 1000`
+`python -W ignore main.py --subsample 1.0 --epochs 100`
+
+The `results.txt` has the output of the command below, giving around ~0.90 accuracy.
 
 **PS.** All code is written in Pyton 3 and Pytorch is used as DL library. Notebooks may not be displayed in github so it's better to clone or fork if you wish.
