@@ -3,5 +3,6 @@
 .idea
 .ipynb_checkpoints
 data/
+tensorflow_speech/data
 __pycache__
 
