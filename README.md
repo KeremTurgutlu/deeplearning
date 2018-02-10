@@ -8,6 +8,6 @@ https://github.com/fastai/fastai
 
 - Porto Seguro Kaggle Competition
 - Tensorflow Speech Recognition Competition
-
+- Avazu Click Through Rate Prediction Competition
 
 
