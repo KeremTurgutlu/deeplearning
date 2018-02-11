@@ -45,7 +45,7 @@ def create_one_mask_arr(MASK_FILES_PATH):
         target: where to save the new one mask
     """
     mask_arrays = [cv2.imread(p, cv2.IMREAD_GRAYSCALE) for p in MASK_FILES_PATH]
-    zeros = np.zeros((mask_arrays.shape[0], mask_arrays.shape[1]))
+    zeros = np.zeros((mask_arrays[0].shape[0], mask_arrays[0].shape[1]))
     for arr in mask_arrays:
         zeros = zeros + arr
 
