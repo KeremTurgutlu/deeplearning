@@ -13,7 +13,8 @@ def get_img_mask_paths(MAIN_PATH, i):
     as well as the id of that img
     """
     IMG_FOLDER_PATHS = [MAIN_PATH + p for p in os.listdir(MAIN_PATH)]
-    IMG_PATH, MASK_PATHS = [IMG_FOLDER_PATHS[i] + '/' + p + '/' for p in os.listdir(IMG_FOLDER_PATHS[i])]
+    IMG_PATH = IMG_FOLDER_PATHS[i] + '/images/'
+    MASK_PATHS = IMG_FOLDER_PATHS[i] + '/masks/'
     IMG_FILE_PATH = IMG_PATH + os.listdir(IMG_PATH)[0]
     MASK_FILES_PATH = [MASK_PATHS + p for p in os.listdir(MASK_PATHS)]
 
