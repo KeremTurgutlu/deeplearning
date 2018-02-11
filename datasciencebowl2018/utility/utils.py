@@ -68,6 +68,6 @@ def show_image(image_path, one_mask_path, figsize=(20, 20)):
     plt.imshow(image)
     plt.imshow(masked_image, cmap='cool', alpha=0.35)
     plt.subplot(1, 2, 2)
-    plt.imshow(img)
+    plt.imshow(image)
     plt.show()
 
