@@ -6,6 +6,11 @@ import cv2
 from PIL import Image
 
 
+def list_directory(path):
+    if path[-1] != '/':
+        path = path + '/'
+    return [path + p + '/' for p in os.listdir(path)]
+
 
 def get_img_mask_paths(MAIN_PATH, i):
     """
@@ -52,7 +57,7 @@ def create_one_mask_arr(MASK_FILES_PATH):
     return zeros
 
 
-def show_image(image_path, one_mask_path, figsize=(20, 20)):
+def show_image(image_path, one_mask_path, alpha=0.35, figsize=(20, 20)):
 
     """
     Show original image and masked image next to each other
@@ -66,8 +71,26 @@ def show_image(image_path, one_mask_path, figsize=(20, 20)):
     plt.figure(figsize=figsize)
     plt.subplot(1, 2, 1)
     plt.imshow(image)
-    plt.imshow(masked_image, cmap='cool', alpha=0.35)
+    plt.imshow(masked_image, cmap='cool', alpha=alpha)
     plt.subplot(1, 2, 2)
     plt.imshow(image)
     print(image_path.split('/')[-1])
+    plt.show()
+
+def show_image2(image_arr, mask_arr, alpha=0.35, figsize=(20, 20)):
+
+    """
+    Show original image and masked image next to each other
+    Input:
+        image_path: path of the original image
+        image_mask_arr:
+    """
+
+    mask_arr = np.ma.masked_where(mask_arr == 0, mask_arr)
+    plt.figure(figsize=figsize)
+    plt.subplot(1, 2, 1)
+    plt.imshow(image_arr)
+    plt.imshow(mask_arr, cmap='cool', alpha=alpha)
+    plt.subplot(1, 2, 2)
+    plt.imshow(image_arr)
     plt.show()
