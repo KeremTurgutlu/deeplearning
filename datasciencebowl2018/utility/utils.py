@@ -11,6 +11,10 @@ def list_directory(path):
         path = path + '/'
     return [path + p + '/' for p in os.listdir(path)]
 
+def get_image_onemask_paths(path):
+    image_paths = [p + 'images/' + p.split('/')[-2] + '.png' for p in list_directory(path)]
+    mask_paths =  [p + 'one_mask.png' for p in list_directory(path)]
+    return list(zip(image_paths, mask_paths))
 
 def get_img_mask_paths(MAIN_PATH, i):
     """
@@ -94,3 +98,4 @@ def show_image2(image_arr, mask_arr, alpha=0.35, figsize=(20, 20)):
     plt.subplot(1, 2, 2)
     plt.imshow(image_arr)
     plt.show()
+
