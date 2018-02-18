@@ -152,17 +152,17 @@ Validation : [{round(val_loss, 4)} , {round(val_dice_coeff, 4)}]")
 
         it_count = len(test_loader)
         preds = []
-        with tqdm(total=it_count, desc='Classifying') as pbar:
-            for ind, (images, index) in enumerate(test_loader):
-                if self.use_cuda:
-                    images = images.cuda()
 
-                images = V(images, volatile=True)
+        for ind, (images, index) in enumerate(test_loader):
+            if self.use_cuda:
+                images = images.cuda()
 
-                # forward
-                logits = self.net(images)
-                probs = F.sigmoid(logits)
-                probs = probs.data.cpu().numpy()
-                preds.append(probs)
+            images = V(images, volatile=True)
+
+            # forward
+            logits = self.net(images)
+            probs = F.sigmoid(logits)
+            probs = probs.data.cpu().numpy()
+            preds.append(probs)
         return preds
 
