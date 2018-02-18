@@ -11,7 +11,7 @@ def create_validation_dirs(main_path, data_path, train_ratio):
         data_path (str): path of the directory with data that will be copied
         train_ratio (float): ratio of training data to create
     """
-    image_list = os.listdir(full_path)
+    image_list = os.listdir(data_path)
 
     # remove previous train and valid dirs
     shutil.rmtree(main_path + 'train/', True)
