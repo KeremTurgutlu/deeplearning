@@ -36,13 +36,15 @@ class NucleiClassifier:
         self.epoch_counter = 0
         self.use_cuda = torch.cuda.is_available()
 
-    def restore_model(self, model_path):
+    def restore_model(self, model_path, optim_path=None):
         """
         Restore a model parameters from the given path
         Inputs:
             model_path (str): The path to the model to restore
         """
         self.net.load_state_dict(torch.load(model_path))
+        if optim_path is not None:
+            self.optimizer.load_state_dict(optim_path)
 
     def save_model(self, model_path, optim_path):
         torch.save(self.net.state_dict(), model_path)
