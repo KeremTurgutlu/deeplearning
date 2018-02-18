@@ -2,6 +2,7 @@ import os
 import shutil
 import numpy as np
 
+
 def create_validation_dirs(main_path, data_path, train_ratio):
     """
     Creates train and valid folders from data in a data_path folder.
@@ -19,7 +20,7 @@ def create_validation_dirs(main_path, data_path, train_ratio):
     os.makedirs(main_path + 'train', exist_ok=True)
     os.makedirs(main_path + 'valid', exist_ok=True)
     # find n
-    n = int(len(image_lists) * train_ratio)
+    n = int(len(image_list) * train_ratio)
     # shuffle list inplace
     np.random.shuffle(image_list)
     # get training and valid data
