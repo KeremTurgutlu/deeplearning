@@ -15,11 +15,11 @@ class NucleiDataset(Dataset):
         image_dir = self.image_dirs[index]
         image_id = image_dir.split('/')[-2]
         image_file = image_dir + 'images/' + image_id + '.png'
+        image = cv2.imread(image_file, cv2.IMREAD_COLOR)
 
         # Get mask and read files
         if self.mode in ['train', 'valid']:
             mask_file = image_dir + '/one_mask.png'
-            image = cv2.imread(image_file, cv2.IMREAD_COLOR)
             mask = cv2.imread(mask_file, cv2.IMREAD_GRAYSCALE)
             if self.transform is not None:
                 return self.transform(image, mask, image_id)

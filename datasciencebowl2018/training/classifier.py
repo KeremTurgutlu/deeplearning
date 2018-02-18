@@ -149,10 +149,7 @@ Validation : [{round(val_loss, 4)} , {round(val_dice_coeff, 4)}]")
     def predict(self, test_loader):
         # eval mode
         self.net.eval()
-
-        it_count = len(test_loader)
         preds = []
-
         for ind, (images, index) in enumerate(test_loader):
             if self.use_cuda:
                 images = images.cuda()
