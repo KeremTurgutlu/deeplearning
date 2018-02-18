@@ -28,9 +28,9 @@ def create_validation_dirs(main_path, data_path, train_ratio):
     valid_dirs = image_list[n:]
     # copy image dirs to train and valid
     for _dir in train_dirs:
-        shutil.copytree(full_path + _dir, main_path + 'train/' + _dir)
+        shutil.copytree(data_path + _dir, main_path + 'train/' + _dir)
     for _dir in valid_dirs:
-        shutil.copytree(full_path + _dir, main_path + 'valid/' + _dir)
+        shutil.copytree(data_path+ _dir, main_path + 'valid/' + _dir)
 
     print(f"Copied {n} training and {len(image_list)-n} validation data")
 
