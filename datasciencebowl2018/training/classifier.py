@@ -47,9 +47,9 @@ class NucleiClassifier:
     def save_model(self, model_path, optim_path):
         torch.save(self.net.state_dict(), model_path)
         torch.save({
-            'optimizer': optimizer.state_dict(),
+            'optimizer': self.optimizer.state_dict(),
             'iter': i,
-            'epoch': epoch,
+            'epoch': self.epoch_counter,
         }, optim_path)
 
     def _criterion(self, logits, labels):
@@ -137,6 +137,7 @@ Validation : [{round(val_loss, 4)} , {round(val_dice_coeff, 4)}]")
 
     # main functions
     def train(self, train_loader, valid_loader, optimizer, epochs, threshold=0.5):
+        self.optimizer = optimizer
         if self.use_cuda:
             self.net.cuda()
 
