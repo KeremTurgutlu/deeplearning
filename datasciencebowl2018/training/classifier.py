@@ -51,7 +51,7 @@ class NucleiClassifier:
         for ind, (inputs, targets, index) in enumerate(valid_loader):
             if self.use_cuda:
                 inputs = inputs.cuda()
-                targets = inputs.cuda()
+                targets = targets.cuda()
             inputs, targets = V(inputs, volatile=True), V(targets, volatile=True) # volatile since inference mode
 
             # forward
