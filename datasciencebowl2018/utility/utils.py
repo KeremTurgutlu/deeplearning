@@ -11,10 +11,13 @@ def list_directory(path):
         path = path + '/'
     return [path + p + '/' for p in os.listdir(path)]
 
-def get_image_onemask_paths(path):
+def get_image_onemask_paths(path, onemask=True):
     image_paths = [p + 'images/' + p.split('/')[-2] + '.png' for p in list_directory(path)]
-    mask_paths =  [p + 'one_mask.png' for p in list_directory(path)]
-    return list(zip(image_paths, mask_paths))
+    if onemask:
+        mask_paths =  [p + 'one_mask.png' for p in list_directory(path)]
+        return list(zip(image_paths, mask_paths))
+    else:
+        return image_paths
 
 def get_img_mask_paths(MAIN_PATH, i):
     """
@@ -61,7 +64,7 @@ def create_one_mask_arr(MASK_FILES_PATH):
     return zeros
 
 
-def show_image(image_path, one_mask_path, alpha=0.35, figsize=(20, 20)):
+def show_image(image_path, one_mask_path=None, alpha=0.35, figsize=(20, 20)):
 
     """
     Show original image and masked image next to each other
@@ -69,17 +72,22 @@ def show_image(image_path, one_mask_path, alpha=0.35, figsize=(20, 20)):
         image_path: path of the original image
         image_mask_arr:
     """
-    image_mask = cv2.imread(one_mask_path, cv2.IMREAD_GRAYSCALE)
-    masked_image = np.ma.masked_where(image_mask == 0, image_mask)
     image = cv2.imread(image_path, cv2.IMREAD_COLOR)
     plt.figure(figsize=figsize)
-    plt.subplot(1, 2, 1)
-    plt.imshow(image)
-    plt.imshow(masked_image, cmap='cool', alpha=alpha)
-    plt.subplot(1, 2, 2)
-    plt.imshow(image)
-    print(image_path.split('/')[-1])
-    plt.show()
+    if one_mask_path is not None:
+        image_mask = cv2.imread(one_mask_path, cv2.IMREAD_GRAYSCALE)
+        masked_image = np.ma.masked_where(image_mask == 0, image_mask)
+        plt.subplot(1, 2, 1)
+        plt.imshow(image)
+        plt.imshow(masked_image, cmap='cool', alpha=alpha)
+        plt.subplot(1, 2, 2)
+        plt.imshow(image)
+        print(image_path.split('/')[-1])
+        plt.show()
+    else:
+        plt.imshow(image)
+        print(image_path.split('/')[-1])
+        plt.show()
 
 def show_image2(image_arr, mask_arr, alpha=0.35, figsize=(20, 20)):
 

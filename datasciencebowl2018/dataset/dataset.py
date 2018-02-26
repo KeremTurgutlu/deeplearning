@@ -27,7 +27,7 @@ class NucleiDataset(Dataset):
                 return image, mask, image_id
         # Just read files
         else:
-            if self.transform is not None:
+            if self.transform in ['test']:
                 return self.transform(image, None, image_id)
             else:
                 return image, image_id

@@ -36,43 +36,41 @@ class NucleiClassifier:
         self.epoch_counter = 0
         self.use_cuda = torch.cuda.is_available()
 
-    def _criterion(self, logits, labels):
-        return BCELoss2d().forward(logits, labels) + \
-               SoftDiceLoss().forward(logits, labels)
+    # def _criterion(self, logits, labels):
+    #     return BCELoss2d().forward(logits, labels) + \
+    #            SoftDiceLoss().forward(logits, labels)
 
     def _validate_epoch(self, valid_loader, threshold):
-        losses = AverageMeter()
-        dice_coeffs = AverageMeter()
+        """
+        Validate by self._criterion
+        """
+        losses = AverageMeter() #reset for epoch
 
-        it_count = len(valid_loader)
         batch_size = valid_loader.batch_size
 
-        for ind, (images, targets, index) in enumerate(valid_loader):
+        for ind, (inputs, targets, index) in enumerate(valid_loader):
             if self.use_cuda:
-                images = images.cuda()
-                targets = targets.cuda()
-            # volatile since inference mode
-            images = V(images, volatile=True)
-            targets = V(targets, volatile=True)
+                inputs = inputs.cuda()
+                targets = inputs.cuda()
+            inputs, targets = V(inputs, volatile=True), V(targets, volatile=True) # volatile since inference mode
 
             # forward
-            logits = self.net(images)
+            logits = self.net(inputs)
             probs = F.sigmoid(logits)
             preds = (probs > threshold).double()
-
+            # compute loss for iteration
             loss = self._criterion(logits, targets)
-            acc = dice_coeff(preds, targets)
+            # update loss for iteration
             losses.update(loss.data[0], batch_size)
-            dice_coeffs.update(acc.data[0], batch_size)
 
-        return losses.avg, dice_coeffs.avg
+        return losses.avg
 
     def _train_epoch(self, train_loader, optimizer, threshold):
-        losses = AverageMeter()
-        dice_coeffs = AverageMeter()
-
+        """
+        Optimize by self._criterion and self.optimizer
+        """
+        losses = AverageMeter() # reset for epoch
         batch_size = train_loader.batch_size
-        it_count = len(train_loader)
 
         for ind, (inputs, targets, index) in enumerate(train_loader):
 
@@ -85,43 +83,48 @@ class NucleiClassifier:
             logits = self.net(inputs)
             probs = F.sigmoid(logits)
             preds = (probs > threshold).double()
-
-            # backward + optimize
+            # compute loss for iteration
             loss = self._criterion(logits, targets)
+            # update loss for iteration
+            losses.update(loss.data[0], batch_size)
+            # update weights
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-            # print stats
-            acc = dice_coeff(preds, targets)
-            losses.update(loss.data[0], batch_size)
-            dice_coeffs.update(acc.data[0], batch_size)
-
-        return losses.avg, dice_coeffs.avg
+        return losses.avg
 
     def _run_epoch(self, train_loader, valid_loader, optimizer,
                    threshold=0.5):
+        """
+        Run a single epoch print training and validation loss
+        """
         # train mode
         self.net.train()
 
         # run a train pass
-        train_loss, train_dice_coeff = self._train_epoch(train_loader, optimizer, threshold)
+        train_loss = self._train_epoch(train_loader, optimizer, threshold)
 
         # eval mode
         self.net.eval()
 
         # validate epoch
-        val_loss, val_dice_coeff = self._validate_epoch(valid_loader, threshold)
+        val_loss = self._validate_epoch(valid_loader, threshold)
 
         self.epoch_counter += 1
 
         print(f"Epoch: {self.epoch_counter}")
-        print(f"Training : [{round(train_loss, 4)} , {round(train_dice_coeff, 4)}],\
-Validation : [{round(val_loss, 4)} , {round(val_dice_coeff, 4)}]")
+        print(f"Training : [{round(train_loss, 4)}],\
+Validation : [{round(val_loss, 4)}]")
 
     # main methods
-    def train(self, train_loader, valid_loader, optimizer, epochs, threshold=0.5):
+    def train(self, train_loader, valid_loader, optimizer, crit, epochs, threshold=0.5):
+        """
+        Takes optimizer and criterion
+        """
         self.optimizer = optimizer
+        self._criterion = crit
+
         if self.use_cuda:
             self.net.cuda()
 
@@ -141,10 +144,8 @@ Validation : [{round(val_loss, 4)} , {round(val_dice_coeff, 4)}]")
 
     def save_model(self, model_path, optim_path):
         torch.save(self.net.state_dict(), model_path)
-        torch.save({
-            'optimizer': self.optimizer.state_dict(),
-            'epoch': self.epoch_counter
-        }, optim_path)
+        if optim_path is not None:
+            torch.save(self.optimizer.state_dict(), optim_path)
 
     def predict(self, test_loader):
         # eval mode

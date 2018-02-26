@@ -1,6 +1,10 @@
 import os
 import shutil
 import numpy as np
+import matplotlib.pyplot as plt
+import torch
+from torch.autograd import Variable as V
+import torch.nn.functional as F
 
 
 def create_validation_dirs(main_path, data_path, train_ratio):
@@ -38,8 +42,9 @@ def create_validation_dirs(main_path, data_path, train_ratio):
 def show_predictions(dataloader, classifier, threshold=0.5, n=None):
     print('\t\t Image \t\t\t\t\t Mask \t\t\t\t Predicted Mask')
     for i, (img, msk, _ )in enumerate(iter(dataloader)):
+        classifier.net.eval()
         plt.figure(figsize=(20, 20))
-        if torch.cuda.is_available:
+        if torch.cuda.is_available():
             img = img.cuda()
         out = classifier.net(V(img))
         plt.subplot(1,3,1)
