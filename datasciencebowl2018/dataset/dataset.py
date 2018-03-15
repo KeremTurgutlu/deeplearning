@@ -4,11 +4,12 @@ import cv2
 
 
 class NucleiDataset(Dataset):
-    def __init__(self, path, transform=None, mode='train'):
+    def __init__(self, path, transform=None, mode='train', mask_file='/one_mask.png'):
         self.path = path
         self.transform = transform
         self.mode = mode
         self.image_dirs = list_directory(path)
+        self.mask_file = mask_file
 
     def __getitem__(self, index):
         # Get filenames
@@ -19,8 +20,7 @@ class NucleiDataset(Dataset):
 
         # Get mask and read files
         if self.mode in ['train', 'valid']:
-            mask_file = image_dir + '/one_mask.png'
-            mask = cv2.imread(mask_file, cv2.IMREAD_GRAYSCALE)
+            mask = cv2.imread(image_dir + self.mask_file, cv2.IMREAD_GRAYSCALE)
             if self.transform is not None:
                 return self.transform(image, mask, image_id)
             else:
@@ -35,3 +35,4 @@ class NucleiDataset(Dataset):
 
     def __len__(self):
         return len(self.image_dirs)
+

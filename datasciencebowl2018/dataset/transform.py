@@ -137,6 +137,19 @@ def random_crop_resize(image, p=0.5):
     return image, mask
 
 
+# transforming 2d mask to multichannel
+def get_3d_mask(mask):
+    if len(np.unique(mask)) == 2:
+        back_channel = (mask == 30)*1 # background
+        nuclei_channel = (mask == 215)*1 # nuclei
+        overlap_channel = np.zeros_like(mask) # overlap - missing so all 0s
+    else:
+        back_channel = (mask == 30)*1 # background
+        nuclei_channel = (mask == 110)*1 # nuclei
+        overlap_channel = (mask == 215)*1 # overlap
+    # stack depth-wise
+    multiclass_mask = np.dstack([back_channel, nuclei_channel, overlap_channel])
+    return multiclass_mask
 
 
 
