@@ -56,8 +56,6 @@ class NucleiClassifier:
 
             # forward
             logits = self.net(inputs)
-            probs = F.sigmoid(logits)
-            preds = (probs > threshold).double()
             # compute loss for iteration
             loss = self._criterion(logits, targets)
             # update loss for iteration
@@ -81,8 +79,6 @@ class NucleiClassifier:
 
             # forward
             logits = self.net(inputs)
-            probs = F.sigmoid(logits)
-            preds = (probs > threshold).double()
             # compute loss for iteration
             loss = self._criterion(logits, targets)
             # update loss for iteration
