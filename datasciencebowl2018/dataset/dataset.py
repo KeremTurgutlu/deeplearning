@@ -2,8 +2,13 @@ from utility.utils import list_directory
 from torch.utils.data import *
 import cv2
 
-
 class NucleiDataset(Dataset):
+    """
+    path (str): path of the directory that contains all data dirs (train, valid, test)
+    transform (func): a function to apply for transforms during reading data
+    mode (str): either 'train', 'valid' or something else like 'test'
+    mask_file (str): filename that has the ground truth image, e.g. mask
+    """
     def __init__(self, path, transform=None, mode='train', mask_file='/one_mask.png'):
         self.path = path
         self.transform = transform
@@ -28,10 +33,9 @@ class NucleiDataset(Dataset):
         # Just read files
         else:
             if self.transform is not None:
-                return self.transform(image, None, image_id)
+                return self.transform(image, image_id)
             else:
                 return image, image_id
-
 
     def __len__(self):
         return len(self.image_dirs)

@@ -76,54 +76,6 @@ def create_one_mask_arr(MASK_FILES_PATH):
     return zeros
 
 
-def show_image(image_path, one_mask_path=None, alpha=0.35, figsize=(20, 20)):
-
-    """
-    Show original image and masked image next to each other
-    Input:
-        image_path: path of the original image
-        image_mask_arr:
-    """
-    image = cv2.imread(image_path, cv2.IMREAD_COLOR)
-    plt.figure(figsize=figsize)
-    if one_mask_path is not None:
-        image_mask = cv2.imread(one_mask_path, cv2.IMREAD_GRAYSCALE)
-        masked_image = np.ma.masked_where(image_mask == 0, image_mask)
-        plt.subplot(1, 2, 1)
-        plt.imshow(image)
-        plt.imshow(masked_image, cmap='cool', alpha=alpha)
-        plt.subplot(1, 2, 2)
-        plt.imshow(image)
-        print(image_path.split('/')[-1])
-        plt.show()
-    else:
-        plt.imshow(image)
-        print(image_path.split('/')[-1])
-        plt.show()
-
-def show_image2(image_arr, mask_arr, alpha=0.35, figsize=(20, 20)):
-
-    """
-    Show original image and masked image next to each other
-    Input:
-        image_path: path of the original image
-        image_mask_arr:
-    """
-
-    mask_arr = np.ma.masked_where(mask_arr == 0, mask_arr)
-    plt.figure(figsize=figsize)
-    plt.subplot(1, 2, 1)
-    plt.imshow(image_arr)
-    plt.imshow(mask_arr, cmap='cool', alpha=alpha)
-    plt.subplot(1, 2, 2)
-    plt.imshow(image_arr)
-    plt.show()
-
-def show_with_sz(image, sz=10):
-    plt.figure(figsize=(sz, sz))
-    plt.imshow(image)
-    plt.show()
-    plt.close()
 
 # read 2d - single channel image
 def read2d(path): return cv2.imread(path, cv2.IMREAD_GRAYSCALE)
