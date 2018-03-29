@@ -51,7 +51,7 @@ def create_validation_dirs(dst, src, train_ratio, train_dirs=None, valid_dirs=No
         seed (int): random seed
     """
     np.random.seed(seed)
-    image_list = os.listdir(data_path)
+    image_list = os.listdir(src)
 
     # remove previous train and valid dirs
     shutil.rmtree(dst + 'train/', True)
@@ -72,8 +72,8 @@ def create_validation_dirs(dst, src, train_ratio, train_dirs=None, valid_dirs=No
         valid_dirs = image_list[n:]
     # copy image dirs to train and valid
     for trn_dir in train_dirs:
-        shutil.copytree(src + trn_dir, main_path + 'train/' + trn_dir)
+        shutil.copytree(src + trn_dir, dst + 'train/' + trn_dir)
     for val_dir in valid_dirs:
-        shutil.copytree(src + val_dir, main_path + 'valid/' + val_dir)
+        shutil.copytree(src + val_dir, dst + 'valid/' + val_dir)
 
     print(f"Copied {len(train_dirs)} training and {len(valid_dirs)} validation data")

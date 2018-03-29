@@ -135,15 +135,22 @@ class NucleiClassifier:
         """
         Restore a model parameters from the given path
         Inputs:
-            model_path (str): The path to the model to restore
+            path (str): The path to the model to restore
+            gpu (int): GPU instance to continue training
         """
-        self.net.cpu()
+        #self.net.cpu()
+        #self.gpu = gpu
         state = torch.load(path)
         self.net.load_state_dict(state['state_dict'])
         self.optimizer.load_state_dict(state['optimizer'])
         self.epoch_counter = state['epoch']  # counts number of epochs
 
     def save_model(self, path):
+        """
+        Save model parameters to the given path
+        Inputs:
+            model_path (str): The path to the model to restore
+        """
         state = {
             'epoch': self.epoch_counter,
             'state_dict': self.net.state_dict(),
