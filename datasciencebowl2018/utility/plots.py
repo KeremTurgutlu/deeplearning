@@ -100,3 +100,11 @@ def show_predictions(dataloader, classifier, threshold=0.5, n=None):
         if n:
             if n == i:
                 break
+
+# FASTAI
+def show_img(im, figsize=None, ax=None):
+    if not ax: fig,ax = plt.subplots(figsize=figsize)
+    ax.imshow(im)
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+    return ax

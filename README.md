@@ -1,6 +1,8 @@
 # deeplearning
 
-In this repo I am implementing cool deeplearning stuff, replicating SOTA solutions and papers...
+This repo consists of self-maintained projects that are implemented for fun and sake of learning. 
+
+In this repo I am implementing cool deeplearning stuff, replicating SOTA solutions and/or papers...
 It might resemble a DL library in a sense, it's inspired mostly by Fast.ai so for more and better go to:
 https://github.com/fastai/fastai
 
