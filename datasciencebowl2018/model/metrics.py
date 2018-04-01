@@ -1,4 +1,4 @@
-from torch import nn
+import numpy as np
 import torch.nn.functional as F
 
 def dice_score(logits, targets, thresh):
