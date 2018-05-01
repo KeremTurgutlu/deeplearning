@@ -81,8 +81,7 @@ test_df = test
 
 
 # get cat sizes
-cats = ['ip', 'app', 'device', 'os', 'channel',
-'click_timeDay', 'click_timeHour']
+cats = ['ip', 'app', 'device', 'os', 'channel','click_timeHour']
 cat_sz = [(c, len(pd.concat([trn_df, val_df, test_df])[c].unique())) for c in cats]
 # create embedding sizes
 emb_szs = [(c, min(50, (c+1)//2)) for _,c in cat_sz]

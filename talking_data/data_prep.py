@@ -17,20 +17,22 @@ test_dtype_dict={"ip":"int32",
       "channel":"int16",
       "click_id":"int32"}
 
-train_path =  "../data/talking_data/train.csv"
-test_path = "../data/talking_data/train.csv"
+train_path =  "../data/talking_data/train_sample.csv"
+test_path = "../data/talking_data/test.csv"
 
 train = pd.read_csv(train_path,
                     parse_dates=["click_time", "attributed_time"],
-                    skiprows=range(1,30000000), # skip 30 M rows
+                    skiprows=range(1,30000000), # skip 30 M rows for full train
                     dtype=train_dtype_dict)
 
 test = pd.read_csv(test_path,
                    parse_dates=["click_time"],
+                   #skiprows=range(1,18780000), # for debug
                    dtype=test_dtype_dict)
 
 print(f"Read successfully from {train_path}")
 print(f"Read successfully from {test_path}")
+print()
 
 common_cols = ['ip', 'app', 'device', 'os', 'channel', 'click_time']
 merged = pd.concat([train[common_cols], test[common_cols]])
@@ -52,8 +54,10 @@ def add_dayhour(data):
 merged = add_dayhour(merged)
 
 # NORMALIZE CATS
-cats = ['ip', 'app', 'device', 'os', 'channel',
-'click_timeDay', 'click_timeHour']
+# cats = ['ip', 'app', 'device', 'os', 'channel',
+# 'click_timeDay', 'click_timeHour']
+
+cats = ['ip', 'app', 'device', 'os', 'channel']
 
 def norm_cats(data, cats, dtype="int16"):
     for c in cats:
@@ -64,11 +68,12 @@ def norm_cats(data, cats, dtype="int16"):
 merged = norm_cats(merged, cats)
 test = merged[train_len:].reset_index(drop=True)
 rest = merged[:train_len].reset_index(drop=True)
+rest["is_attributed"] = is_attributed
 del merged
 gc.collect()
 
 # CREATE TRAIN-VAL
-train_lower_limits = (8, 4) # DAY 8 HOUR 04
+train_lower_limits = (8, 4) # DAY 8 HOUR 04 - full train
 train_upper_limits = (9, 3) # DAY 9 HOUR 03
 val_lower_limits = (9, 4) # DAY 9 HOUR 04
 val_upper_limits = (9, 15) # DAY 9 HOUR 15
@@ -94,8 +99,15 @@ gc.collect()
 train.reset_index(drop=True, inplace=True)
 val.reset_index(drop=True, inplace=True)
 test.reset_index(drop=True, inplace=True)
+# drop day column
+train.drop("click_timeDay",1, inplace=True)
+val.drop("click_timeDay",1, inplace=True)
+test.drop("click_timeDay",1, inplace=True)
+
 train_val = pd.concat([train, val]).reset_index(drop=True)
 
+print("Train - Val - Test - TrainVal Created Successfully")
+print()
 
 ####################################
 ###### FEATURE ENGINEERING    ######
@@ -109,8 +121,7 @@ random_encoding_cols = \
      'os',
      'channel',
      'click_timeHour',
-     'click_timeDay',
-     ['ip', 'click_timeDay', 'click_timeHour'],
+     ['ip', 'click_timeHour'],
      ['ip', 'app'],
      ['ip', 'app', 'os'],
      ['ip', 'app', 'click_timeHour']]
@@ -178,6 +189,9 @@ for c in random_encoding_cols:
                                    'is_attributed')
     # print("done")
 
+print("Features Created Successfully")
+print()
+
 
 # SAVE DATA FOR MODELING
 dst = "../data/talking_data/"
@@ -185,6 +199,7 @@ train.to_feather(dst+"train_prepd.feather")
 val.to_feather(dst+"val_prepd.feather")
 train_val.to_feather(dst+"train_val_prepd.feather")
 test.to_feather(dst+"test_prepd.feather")
+print(f"All data saved to {dst}")
 print("Success")
 
 
