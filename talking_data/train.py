@@ -10,7 +10,6 @@ np.random.seed(7)
 
 # IMPORT THESE FROM LOCAL - SCHOOL GPU PROBLEM
 sys.path.append('../../../fastai/')
-sys.path.append('../../')
 from fastai.column_data import *
 from fastai.structured import *
 
@@ -95,13 +94,13 @@ n_conts = len(trn_df.columns) - len(cats)
 # initialize model
 model = CrossDenseNN(emb_szs,
                     n_cont=n_conts,
-                    emb_drop=0.5,
+                    emb_drop=emb_drop,
                     out_sz=2,
-                    szs=[500,500],
-                    drops=[0.5, 0.5],
-                    cross_depth = 4,
+                    szs=szs,
+                    drops=drops,
+                    cross_depth = cross_depth,
                     is_reg=False,
-                    is_multi=False).cuda()
+                    is_multi=False).cuda(gpu)
 
 
 bm = BasicModel(model, 'binary_classifier')

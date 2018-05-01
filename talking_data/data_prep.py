@@ -17,18 +17,20 @@ test_dtype_dict={"ip":"int32",
       "channel":"int16",
       "click_id":"int32"}
 
-train_path =  "../../../data/talking/train_sample.csv"
-test_path = "../../../data/talking/test.csv"
+train_path =  "../data/talking_data/train.csv"
+test_path = "../data/talking_data/train.csv"
 
 train = pd.read_csv(train_path,
                     parse_dates=["click_time", "attributed_time"],
-                    skiprows=range(1,18700000),
+                    skiprows=range(1,30000000), # skip 30 M rows
                     dtype=train_dtype_dict)
 
 test = pd.read_csv(test_path,
                    parse_dates=["click_time"],
-                   #skiprows=range(1,18700000),
                    dtype=test_dtype_dict)
+
+print(f"Read successfully from {train_path}")
+print(f"Read successfully from {test_path}")
 
 common_cols = ['ip', 'app', 'device', 'os', 'channel', 'click_time']
 merged = pd.concat([train[common_cols], test[common_cols]])
@@ -178,12 +180,12 @@ for c in random_encoding_cols:
 
 
 # SAVE DATA FOR MODELING
-dst = "../../../data/talking/"
+dst = "../data/talking_data/"
 train.to_feather(dst+"train_prepd.feather")
 val.to_feather(dst+"val_prepd.feather")
 train_val.to_feather(dst+"train_val_prepd.feather")
 test.to_feather(dst+"test_prepd.feather")
-
+print("Success")
 
 
 

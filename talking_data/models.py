@@ -2,6 +2,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torch.nn.init import  kaiming_normal
+from torch.autograd import Variable as V
 
 def emb_init(x):
     x = x.weight.data
@@ -38,9 +39,12 @@ class CrossDenseNN(nn.Module):
         self.is_multi = is_multi
 
         # cross layers
-        self.lins2 = nn.ModuleList([nn.Linear(self.n_emb + self.n_cont, 1).cuda()
+        self.lins2 = nn.ModuleList([nn.Linear(self.n_emb + self.n_cont, 1, bias=False)
                                     for i in range(self.cross_depth)])
-        self.l_out = nn.Linear((self.n_emb + self.n_cont) + self.szs[-1], 2).cuda()
+        self.bias2 = nn.ModuleList([V(torch.zeros((self.n_emb + self.n_cont, 1)),
+                                      requires_grad=True)
+                                   for i in range(self.cross_depth)])
+        self.l_out = nn.Linear((self.n_emb + self.n_cont) + self.szs[-1], 2)
 
     def forward(self, x_cat, x_cont):
 
@@ -59,10 +63,10 @@ class CrossDenseNN(nn.Module):
             if self.use_bn: x = b(x)
             x_dnn = d(x_dnn)
 
-            # CROSS NN
+        # CROSS NN
         xl = x
         x0 = x
-        for l in self.lins2:
-            xl = l(torch.bmm(x0.unsqueeze(2), xl.unsqueeze(1))).squeeze() + xl  # bs x p
+        for l, b in zip(self.lins2, self.bias2):
+            xl = l(torch.bmm(x0.unsqueeze(2), xl.unsqueeze(1))).squeeze() + b + xl  # bs x p
 
         return F.log_softmax(self.l_out(torch.cat([x_dnn, xl], 1)))
