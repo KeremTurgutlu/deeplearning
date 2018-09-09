@@ -11,6 +11,6 @@ https://github.com/fastai/fastai
 - Porto Seguro Kaggle Competition
 - Tensorflow Speech Recognition Competition
 - Avazu Click Through Rate Prediction Competition
-- Data Science Bowl 2018 (In progress)
-
+- Data Science Bowl 2018 
+- Airbus Ship Segmentation (WIP)
 
